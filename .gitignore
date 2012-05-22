@@ -1,5 +1,5 @@
 _build/build.config.php
-core.config.php
+config.core.php
 .settings/
 .project
 .buildpath
