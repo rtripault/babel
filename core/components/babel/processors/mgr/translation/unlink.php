@@ -4,8 +4,11 @@
  * @var Babel $babel
  * @var array $scriptProperties
  */
-$babel = $modx->getService('babel','Babel',$modx->getOption('babel.core_path',null,$modx->getOption('core_path').'components/babel/').'model/babel/',$scriptProperties);
-if (!($babel instanceof Babel)) return;
+$babel =& $modx->babel;
+if (!$babel || !($babel instanceof Babel)) {
+    $babel = $modx->getService('babel', 'Babel', $modx->getOption('babel.core_path', null, $modx->getOption('core_path') . 'components/babel/') . 'model/babel/', $scriptProperties);
+    if (!($babel instanceof Babel)) return;
+}
 
 /** @var $resource modResource */
 $resource = $modx->getObject('modResource', $scriptProperties['id']);

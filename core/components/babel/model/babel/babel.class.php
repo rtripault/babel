@@ -98,6 +98,8 @@ class Babel {
             $this->modx->lexicon->load('babel:default');
         }
 
+        $this->modx->babel =& $this;
+
         /* load babel TV */
 
         $this->babelTv = $modx->getObject('modTemplateVar',array('name' => $babelTvName));

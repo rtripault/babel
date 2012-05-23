@@ -273,7 +273,7 @@ switch ($modx->event->name) {
                     modAB.insert(0, new Babel.Translations());
                     // Keep the spacing between buttons
                     modAB.insert(1, "-");
-                    //modAB.doLayout();
+                    modAB.doLayout();
                 }
             });
         </script>', 1);

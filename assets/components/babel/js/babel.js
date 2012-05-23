@@ -49,6 +49,7 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
             ,listeners: {
                 success: {
                     fn: function(r) {
+                        console.log(r);
                         this.buildTranslations(r.object);
                     }
                     ,scope: this
@@ -66,6 +67,12 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
     ,buildTranslations: function(cfg) {
         //console.log(this);
         var menu = [];
+        var notTranslatedSub = [];
+        var notTranslated = [{
+            text: 'Not translated'
+            ,menu: notTranslatedSub
+            ,handler: function() { return false ; }
+        }];
 
         //Ext.each(cfg.translations, function(translation) {
         Ext.each(cfg, function(translation) {
@@ -75,13 +82,13 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
             var submenu = {
                 items: subItems
             };
-            if (translation.showLayer == "yes") {
-                if (translation.showTranslateButton == "yes") {
+            if (translation.showLayer) {
+                if (translation.showTranslateButton) {
                     subItems.push({
                         text: this.text_create
                     })
                 }
-                if (translation.showSecondRow == "yes") {
+                if (translation.showSecondRow) {
                     subItems.push({
                         text: this.text_link
                         ,scope: this
@@ -93,7 +100,7 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
                         }
                     })
                 }
-                if (translation.showUnlinkButton == "yes") {
+                if (translation.showUnlinkButton) {
                     subItems.push({
                         text: this.text_unlink
                         ,scope: this
@@ -107,38 +114,51 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
                 }
             }
 
-            menu.push({
-                text: translation.text_label + '('+ translation.cultureKey +')'
+            // The menu item
+            var item = {
+                text: translation.contextKey
                 ,disabled: (translation.className == "selected") ? true : false
                 ,menu: (subItems.length >= 1) ? submenu : ''
                 ,scope: this
-                ,handler: function() {
-                    //console.log(this);
-                    location.href = '?a='+ MODx.request.a +'&id='+ this.resourceId;
+                ,iconCls: translation.cultureKey + '-lang'
+                ,ctCls: 'babel-icon'
+                ,handler: function () {
+                    location.href = '?a=' + MODx.request.a + '&id=' + this.resourceId;
                 }
-            });
+            };
+
+            if (this.resourceId != false) {
+                // We already have a translation linked, add to the main menu
+                menu.push(item);
+            } else {
+                // No translation existing yet, add to the "not translated" sub menu
+                item.handler = function() { return false ; };
+                notTranslatedSub.push(item);
+            }
         });
 
-        this.setMenu(menu);
-        //this.set('text', 'Translations');
-
-        var modAB = Ext.getCmp('modx-action-buttons');
-        if (modAB) {
-            modAB.doLayout();
+        if (notTranslatedSub.length >= 1) {
+            // We got several not translated languages, add the "not translated" sub menu
+            menu.push('-');
+            menu.push(notTranslated);
         }
+
+        // The whole menu
+        this.setMenu(menu);
     }
 
-    ,link: function(btn, e) {
-        //console.log(btn);
+//    ,buildTranslations: function(cfg) {
+//        console.log(cfg);
+//        this.setMenu(cfg);
+//    }
+
+    ,link: function() {
         if (!this.linkWindow) {
             this.linkWindow = MODx.load({
                 xtype: 'babel-window-translation-link'
                 ,blankValues: true
-//                ,record: this.menu.record
                 ,listeners: {
                     success: function(r) {
-                        console.log('succes with response: ');
-                        console.log(r);
                         // Reload
                         location.href = location.href;
                     }
@@ -150,14 +170,13 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
                 }
             });
         }
-        //this.linkWindow.setValues(this.menu.record);
-        //this.linkWindow.show(e.target);
+
         this.linkWindow.show();
     }
 
     ,unlink: function(data) {
-        console.log('trigger!');
-        console.log(data);
+//        console.log('trigger!');
+//        console.log(data);
 
         MODx.Ajax.request({
             url: this.url
@@ -168,9 +187,7 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
             }
             ,listeners: {
                 success: {
-                    fn: function(r) {
-                        console.log('good dude!');
-                        console.log(r);
+                    fn: function() {
                         // Reload
                         location.href = location.href;
                     }
@@ -235,9 +252,6 @@ Babel.Window.LinkTranslation = function(config) {
             ,fieldLabel: 'Context Key'
             ,name: 'context_key'
         }]
-//        ,listeners: {
-//
-//        }
     });
     Babel.Window.LinkTranslation.superclass.constructor.call(this, config);
 };

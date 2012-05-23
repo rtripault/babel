@@ -1,6 +1,6 @@
 /**
  * Babel CSS file
- * 
+ *
  * @author Jakob Class <jakob.class@class-zec.de>
  *
  * @package babel
@@ -90,4 +90,52 @@
 }
 #babel-box strong {
 	font-weight: bold;
+}
+
+/** ui-refactor */
+
+.babel-icon img {
+    background-repeat: no-repeat;
+}
+/**
+ * Icons by famfamfam http://www.famfamfam.com/lab/icons/flags/
+ */
+.cs-lang {
+    background-image: url(../img/cs.gif);
+}
+.de-lang {
+    background-image: url(../img/de.gif);
+}
+.en-lang {
+    background-image: url(../img/gb.gif);
+}
+.es-lang {
+    background-image: url(../img/es.gif);
+}
+.et-lang {
+    background-image: url(../img/ee.gif);
+}
+.fr-lang {
+    background-image: url(../img/fr.gif);
+}
+.it-lang {
+    background-image: url(../img/it.gif);
+}
+.ja-lang {
+    background-image: url(../img/jp.gif);
+}
+.nl-lang {
+    background-image: url(../img/nl.gif);
+}
+.pl-lang {
+    background-image: url(../img/pl.gif);
+}
+.ru-lang {
+    background-image: url(../img/ru.gif);
+}
+.sv-lang {
+    background-image: url(../img/se.gif);
+}
+.th-lang {
+    background-image: url(../img/th.gif);
 }
