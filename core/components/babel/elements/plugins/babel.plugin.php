@@ -50,19 +50,20 @@ switch ($modx->event->name) {
 //        $output = '';
 //        $errorMessage = '';
 //
-//        /** @var modResource $resource */
-//        $resource =& $modx->event->params['resource'];
-//        if(!$resource) {
-//            /* a new resource is being to created
-//             * -> skip rendering the babel box */
-//            break;
-//        }
-//        $contextKeys = $babel->getGroupContextKeys($resource->get('context_key'));
-//        $currentContextKey = $resource->get('context_key');
-//        if(!in_array($currentContextKey, $contextKeys)) {
-//            // we are not editing a resource within a context defined in Babel
-//            break;
-//        }
+        /** @var modResource $resource */
+        $resource =& $modx->event->params['resource'];
+        if(!$resource) {
+            /* a new resource is being to created
+             * -> skip rendering the babel box */
+            break;
+        }
+        $contextKeys = $babel->getGroupContextKeys($resource->get('context_key'));
+        $currentContextKey = $resource->get('context_key');
+        if(!in_array($currentContextKey, $contextKeys)) {
+            // we are not editing a resource within a context defined in Babel
+            break;
+        }
+
 //        $linkedResources = $babel->getLinkedResources($resource->get('id'));
 //        if(empty($linkedResources)) {
 //            /* always be sure that the Babel TV is set */
