@@ -12,7 +12,13 @@ Babel.Translations = function(config) {
         text: Babel.i18n.translations
         ,cls: 'x-btn-text bmenu'
         ,id: 'babel-toolbox'
-        //,handler: this.showMenu()
+        ,handler: function() {
+            if(this.menu && !this.menu.isVisible() && !this.ignoreNextClick){
+                this.showMenu();
+            } else {
+                this.hideMenu();
+            }
+        }
         ,url: Babel.config.connector_url
         ,listeners: {
             setup: {
