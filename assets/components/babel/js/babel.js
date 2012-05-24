@@ -1,6 +1,5 @@
 Ext.ns('Babel', 'Babel.Window');
 /**
- *
  * @class Babel.Translations
  * @extends Ext.SplitButton
  * @param {Object} config An object of options.
@@ -9,14 +8,10 @@ Ext.ns('Babel', 'Babel.Window');
 Babel.Translations = function(config) {
     config = config || {};
 
-    Ext.applyIf(config,{
-        text: 'Translations'
-        //text: 'Loading translationg…'
-        //text: config.splitlabel
+    Ext.applyIf(config, {
+        text: Babel.i18n.translations
         ,cls: 'x-btn-text bmenu'
         ,id: 'babel-toolbox'
-        //,menu: this.buildTranslations(config)
-        //,menu: []
         //,handler: this.showMenu()
         ,url: Babel.config.connector_url
         ,listeners: {
@@ -66,7 +61,7 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
         var notTranslatedSub = [];
         // The "not translated" menu
         var notTranslated = [{
-            text: 'Not translated'
+            text: Babel.i18n.not_translated
             ,menu: notTranslatedSub
             ,handler: function() { return false ; }
         }];
@@ -124,7 +119,7 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
             // The language/translation menu item
             var item = {
                 text: translation.contextKey
-                ,disabled: (translation.className == "selected") ? true : false
+                ,disabled: (translation.className)
                 ,menu: (subItems.length >= 1) ? submenu : ''
                 ,scope: this
                 ,iconCls: translation.cultureKey + '-lang'
@@ -154,11 +149,11 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
         this.setMenu(menu);
     }
 
-/*    // buildTranslations method used when the menu is generated from PHP
-    ,buildTranslations: function(cfg) {
-        console.log(cfg);
+    // buildTranslations method used when the menu is generated from PHP
+    ,buildTranslationsFromPHP: function(cfg) {
+        //console.log(cfg);
         this.setMenu(cfg);
-    }*/
+    }
 
     ,linkTranslation: function() {
         if (!this.linkWindow) {
@@ -258,7 +253,7 @@ Babel.Window.LinkTranslation = function(config) {
     config = config || {};
 
     Ext.applyIf(config, {
-        title: 'Link translation'
+        title: Babel.i18n.link_translation
         ,url: Babel.config.connector_url
         ,baseParams: {
             action: 'mgr/translation/link'
@@ -276,12 +271,17 @@ Babel.Window.LinkTranslation = function(config) {
             ,hidden: true
         },{
             xtype: 'numberfield'
-            ,fieldLabel: 'Target'
+            ,fieldLabel: Babel.i18n.id_of_target
             ,name: 'target'
         },{
             xtype: 'textfield'
             ,fieldLabel: 'Context Key'
             ,name: 'context_key'
+        },{
+            xtype: 'xcheckbox'
+            ,fieldLabel: ''
+            ,boxLabel: Babel.i18n.copy_tv_values
+            ,name: 'sync-tv'
         }]
     });
     Babel.Window.LinkTranslation.superclass.constructor.call(this, config);

@@ -62,9 +62,9 @@ class linkBabelTranslation extends BabelProcessor {
         $this->babel->updateBabelTv($this->linkedResources, $this->linkedResources);
 
         /* copy values of synchronized TVs to target resource */
-//        if(isset($_POST['babel-link-copy-tvs']) && intval($_POST['babel-link-copy-tvs']) == 1) {
-//            $this->babel->sychronizeTvs($this->resource->get('id'));
-//        }
+        if($this->getProperty('sync-tv') == 1) {
+            $this->babel->sychronizeTvs($this->resource->get('id'));
+        }
 
         return $this->success();
     }

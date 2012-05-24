@@ -38,10 +38,11 @@ $_lang['babel.create_translation'] = 'Create translation';
 $_lang['babel.unlink_translation'] = 'Unlink translation';
 
 $_lang['babel.link_translation'] = 'Link translation';
-$_lang['babel.split_label'] = 'Translations';
+$_lang['babel.translations'] = 'Translations';
+$_lang['babel.not_translated'] = 'Not translated';
 
 $_lang['babel.link_translation_manually'] = 'or <strong>link translation manually</strong>:';
-$_lang['babel.id_of_target'] = 'ID of target:';
+$_lang['babel.id_of_target'] = 'ID of target';
 $_lang['babel.copy_tv_values'] = 'Copy synchronized TVs to target';
 $_lang['babel.save'] = 'Save';
 $_lang['babel.translation_pending'] = '[translations pending]';
