@@ -74,6 +74,57 @@ class getBabelTranslations extends BabelProcessor {
         return $this->success('', $this->list);
     }
 
+    public function buildMenu($contextKey, $cultureKey, $resourceId, $className, $showLayer, $showUnlinkButton, $showTranslateButton, $showSecondRow) {
+        $menu = array(
+            'text' => $contextKey,
+            'disabled' => false,
+            'scope' => 'this',
+            'iconCls' => $cultureKey .'-lang',
+            'ctCls' => 'babel-icon',
+        );
+        if ($resourceId) {
+            $menu['handler'] = 'function() { location.href = "?a='. $this->actions['resource/update'] .'&id='. $resourceId .'" }';
+        }
+
+        // Submenu
+        if ($className) {
+            $menu['disabled'] = true;
+        }
+        if ($showLayer) {
+            $submenu = array();
+            // Unlink
+            if ($showUnlinkButton) {
+                $submenu[] = array(
+                    'text' => $this->modx->lexicon('babel.unlink_translation')
+                );
+            }
+            // Create
+            if ($showTranslateButton) {
+                $submenu[] = array(
+                    'text' => $this->modx->lexicon('babel.create_translation'),
+                );
+            }
+            // Link
+            if ($showSecondRow) {
+                $submenu[] = array(
+                    'text' => $this->modx->lexicon('babel.link_translation'),
+                );
+            }
+
+            if (count($submenu) >= 1)
+                $menu['menu'] = $submenu;
+        }
+
+
+
+        if (!$showTranslateButton) {
+            // Already linked translation
+            $list[] = $menu;
+        } else {
+            // Not created translation
+            $notTranslated['menu'][] = $menu;
+        }
+    }
 }
 
 return 'getBabelTranslations';
