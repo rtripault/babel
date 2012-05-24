@@ -8,10 +8,6 @@ Ext.ns('Babel', 'Babel.Window');
  */
 Babel.Translations = function(config) {
     config = config || {};
-    //config = Babel.config || {};
-//    config.translations = Babel.config.translations || {};
-//    config.splitlabel = Babel.config.splitlabel || {};
-//    console.log(config);
 
     Ext.applyIf(config,{
         text: 'Translations'
@@ -36,10 +32,8 @@ Babel.Translations = function(config) {
 };
 
 Ext.extend(Babel.Translations, Ext.SplitButton, {
-
+    // Load the translations data
     setup: function() {
-        console.log('in setup');
-
         MODx.Ajax.request({
             url: this.url
             ,params: {
@@ -49,7 +43,6 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
             ,listeners: {
                 success: {
                     fn: function(r) {
-                        console.log(r);
                         this.buildTranslations(r.object);
                     }
                     ,scope: this
@@ -57,6 +50,7 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
                 ,failure: {
                     fn: function(r) {
                         console.log('failure dude!');
+                        console.log(r);
                     }
                     ,scope: this
                 }
@@ -64,30 +58,42 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
         });
     }
 
+    // Build the split button menus & sub menus
     ,buildTranslations: function(cfg) {
-        //console.log(this);
+        // The main menu
         var menu = [];
+        // Each "not translated" language
         var notTranslatedSub = [];
+        // The "not translated" menu
         var notTranslated = [{
             text: 'Not translated'
             ,menu: notTranslatedSub
             ,handler: function() { return false ; }
         }];
 
-        //Ext.each(cfg.translations, function(translation) {
         Ext.each(cfg, function(translation) {
-            //console.log(translation);
-
+            // Sub menu for "not translated" languages
             var subItems = [];
             var submenu = {
                 items: subItems
             };
+
+            // We got some sub menu to display
             if (translation.showLayer) {
+                // Create translation menu
                 if (translation.showTranslateButton) {
                     subItems.push({
                         text: this.text_create
+                        ,scope: this
+                        ,handler: function() {
+                            var toolbox = Ext.getCmp('babel-toolbox');
+                            if (toolbox) {
+                                toolbox.createTranslation(this);
+                            }
+                        }
                     })
                 }
+                // Manually link a translation menu
                 if (translation.showSecondRow) {
                     subItems.push({
                         text: this.text_link
@@ -95,26 +101,27 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
                         ,handler: function() {
                             var toolbox = Ext.getCmp('babel-toolbox');
                             if (toolbox) {
-                                toolbox.link();
+                                toolbox.linkTranslation();
                             }
                         }
                     })
                 }
+                // Unlink translation menu
                 if (translation.showUnlinkButton) {
                     subItems.push({
                         text: this.text_unlink
                         ,scope: this
                         ,handler: function() {
-                            var split = Ext.getCmp('babel-toolbox');
-                            if (split) {
-                                split.unlink(this);
+                            var toolbox = Ext.getCmp('babel-toolbox');
+                            if (toolbox) {
+                                toolbox.unlinkTranslation(this);
                             }
                         }
                     })
                 }
             }
 
-            // The menu item
+            // The language/translation menu item
             var item = {
                 text: translation.contextKey
                 ,disabled: (translation.className == "selected") ? true : false
@@ -138,7 +145,7 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
         });
 
         if (notTranslatedSub.length >= 1) {
-            // We got several not translated languages, add the "not translated" sub menu
+            // We got several "not translated" languages, add the "not translated" sub menu
             menu.push('-');
             menu.push(notTranslated);
         }
@@ -147,12 +154,13 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
         this.setMenu(menu);
     }
 
-//    ,buildTranslations: function(cfg) {
-//        console.log(cfg);
-//        this.setMenu(cfg);
-//    }
+/*    // buildTranslations method used when the menu is generated from PHP
+    ,buildTranslations: function(cfg) {
+        console.log(cfg);
+        this.setMenu(cfg);
+    }*/
 
-    ,link: function() {
+    ,linkTranslation: function() {
         if (!this.linkWindow) {
             this.linkWindow = MODx.load({
                 xtype: 'babel-window-translation-link'
@@ -174,10 +182,7 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
         this.linkWindow.show();
     }
 
-    ,unlink: function(data) {
-//        console.log('trigger!');
-//        console.log(data);
-
+    ,unlinkTranslation: function(data) {
         MODx.Ajax.request({
             url: this.url
             ,params: {
@@ -204,11 +209,37 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
         });
     }
 
+    ,createTranslation: function(data) {
+        MODx.Ajax.request({
+            url: this.url
+            ,params: {
+                action: 'mgr/translation/create'
+                ,id: MODx.request.id
+                ,context_key: data.contextKey
+            }
+            ,listeners: {
+                success: {
+                    fn: function(r) {
+                        // Reload to the newly created resource
+                        location.href = '?a='+ MODx.request.a +'&id='+ r.object.id;
+                    }
+                    ,scope: this
+                }
+                ,failure: {
+                    fn: function(r) {
+                        console.log('failure dude!');
+                        console.log(r);
+                    }
+                    ,scope: this
+                }
+            }
+        });
+    }
+
     ,setMenu: function(menu) {
         var hasMenu = (this.menu != null);
         this.menu = Ext.menu.MenuMgr.get(menu);
-        if (this.rendered && !hasMenu)
-        {
+        if (this.rendered && !hasMenu) {
             this.el.child(this.menuClassTarget).addClass('x-btn-with-menu');
             this.menu.on("show", this.onMenuShow, this);
             this.menu.on("hide", this.onMenuHide, this);

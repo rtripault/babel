@@ -14,7 +14,8 @@ $modx->babel = new Babel($modx);
 $modx->lexicon->load('babel:default');
 
 // handle request
-$path = $modx->getOption('processorsPath', $modx->babel->config, $babelCorePath.'processors/');
+$path = $modx->getOption('processors_path', $modx->babel->config, $babelCorePath.'processors/');
+
 $modx->request->handleRequest(array(
     'processors_path' => $path,
     'location' => '',

@@ -67,9 +67,13 @@ class Babel {
      */
     function __construct(modX &$modx,array $config = array()) {
         $this->modx =& $modx;
+        $this->modx->babel =& $this;
 
         $corePath = $this->modx->getOption('babel.core_path',null,$modx->getOption('core_path').'components/babel/');
-        $assetsUrl = $this->modx->getOption('babel.assets_url',null,$modx->getOption('assets_url').'components/babel/');
+        //$assetsUrl = $this->modx->getOption('babel.assets_url',null,$modx->getOption('assets_url').'components/babel/');
+
+        $basePath = $this->modx->getOption('babel.core_path', $config, $this->modx->getOption('core_path') . 'components/babel/');
+        $assetsUrl = $this->modx->getOption('babel.assets_url' , $config, $this->modx->getOption('assets_url') . 'components/babel/');
 
         $contextKeysOption = $this->modx->getOption('babel.contextKeys',$config,'');
         $contextKeyToGroup = $this->decodeContextKeySetting($contextKeysOption);
@@ -82,7 +86,13 @@ class Babel {
         $babelTvName = $this->modx->getOption('babel.babelTvName',$config,'babelLanguageLinks');
 
         $this->config = array_merge(array(
+            'base_path' => $basePath,
+            'core_path' => $basePath,
+            'model_path' => $basePath . 'model/',
+            'processors_path' => $basePath . 'processors/',
+
             'corePath' => $corePath,
+
             'chunksPath' => $corePath.'elements/chunks/',
             'chunkSuffix' => '.chunk.tpl',
             'cssUrl' => $assetsUrl.'css/',
@@ -91,14 +101,31 @@ class Babel {
             'syncTvs' => $syncTvs,
             'babelTvName' => $babelTvName,
             'connector_url' => $assetsUrl . 'connector.php',
+
+            'debug' => false,
+            'debug_user' => '',
         ),$config);
+
+        // Debug settings
+        if ($this->modx->getOption('debug', $this->config, false)) {
+            error_reporting(E_ALL); ini_set('display_errors', true);
+            $this->modx->setLogTarget('FILE');
+            $this->modx->setLogLevel(4);
+
+            $debugUser = $this->config['debug_user'] == '' ? $this->modx->user->get('username') : 'anonymous';
+            $user = $this->modx->getObject('modUser', array('username' => $debugUser));
+            if ($user == null) {
+                $this->modx->user->set('id', $this->modx->getOption('debugUserId', $this->config, 1));
+                $this->modx->user->set('username', $debugUser);
+            } else {
+                $this->modx->user = $user;
+            }
+        }
 
         /* load babel lexicon */
         if ($this->modx->lexicon) {
             $this->modx->lexicon->load('babel:default');
         }
-
-        $this->modx->babel =& $this;
 
         /* load babel TV */
 
@@ -353,7 +380,7 @@ class Babel {
      */
     public function encodeTranslationLinks($linkedResources) {
         if(!is_array($linkedResources)) {
-            return;
+            return '';
         }
         $contextResourcePairs = array();
         foreach($linkedResources as $contextKey => $resourceId){
@@ -374,6 +401,7 @@ class Babel {
         if(!is_array($templateVarResources)) {
             return;
         }
+        /** @var modtemplateVarResource $templateVarResource */
         foreach($templateVarResources as $templateVarResource) {
             /* go through each resource and remove the link of the specified resource */
             $oldValue = $templateVarResource->get('value');
@@ -400,6 +428,7 @@ class Babel {
         if(!is_array($templateVarResources)) {
             return;
         }
+        /** @var modTemplateVarResource $templateVarResource */
         foreach($templateVarResources as $templateVarResource) {
             /* go through each resource and remove the link of the specified context */
             $oldValue = $templateVarResource->get('value');
@@ -411,6 +440,7 @@ class Babel {
             $templateVarResource->save();
         }
         /* finaly clean the babel.contextKeys setting */
+        /** @var modSystemSetting $setting */
         $setting = $this->modx->getObject('modSystemSetting',array(
             'key' => 'babel.contextKeys'));
         if($setting) {
@@ -473,6 +503,7 @@ class Babel {
         $f = $this->config['chunksPath'].strtolower($name).$suffix;
         if (file_exists($f)) {
             $o = file_get_contents($f);
+            /** @var modChunk $chunk */
             $chunk = $this->modx->newObject('modChunk');
             $chunk->set('name',$name);
             $chunk->setContent($o);
