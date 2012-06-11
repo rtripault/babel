@@ -35,6 +35,13 @@ Babel.Translations = function(config) {
 Ext.extend(Babel.Translations, Ext.SplitButton, {
     // Load the translations data
     setup: function() {
+        //
+        MODx.msg.status({
+            title: '[Babel] - Loading'
+            ,message: 'Looking for translations...'
+            ,delay: 1
+        });
+
         MODx.Ajax.request({
             url: this.url
             ,params: {
@@ -45,6 +52,12 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
                 success: {
                     fn: function(r) {
                         this.buildTranslations(r.object);
+
+                        MODx.msg.status({
+                            title: '[Babel] - Translations loaded'
+                            ,message: 'Translations are now loaded.'
+                            ,delay: 1
+                        });
                     }
                     ,scope: this
                 }
@@ -52,6 +65,12 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
                     fn: function(r) {
                         console.log('failure dude!');
                         console.log(r);
+
+                        MODx.msg.status({
+                            title: '[Babel] - Error'
+                            ,message: 'An error occured while loading the translations.'
+                            ,delay: 1
+                        });
                     }
                     ,scope: this
                 }
