@@ -74,6 +74,7 @@ class getBabelTranslations extends BabelProcessor {
         return $this->success('', $this->list);
     }
 
+    // Builds the ExtJS menu from PHP. currently not used
     public function buildMenu($contextKey, $cultureKey, $resourceId, $className, $showLayer, $showUnlinkButton, $showTranslateButton, $showSecondRow) {
         $menu = array(
             'text' => $contextKey,

@@ -92,3 +92,5 @@ $_lang['error.unlink_of_selflink_not_possible'] = 'A link to a resource itself c
 $_lang['error.translation_in_same_context'] = 'A translation can not be created within the same context.';
 $_lang['error.translation_already_exists'] = 'There is already a translation in context [[+context]].';
 $_lang['error.could_not_create_translation'] = 'An error occured while trying to create a translation in context [[+context]].';
+
+$_lang['babel.error_link_itself'] = 'You can not link a resource to itself.';

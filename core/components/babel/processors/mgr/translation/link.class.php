@@ -9,29 +9,20 @@ class linkBabelTranslation extends BabelProcessor {
         $this->target = $this->getProperty('target');
 
         return $this->link();
-//        $response = $this->link();
-//        if ($response) {
-//            $this->modx->log(modX::LOG_LEVEL_ERROR, 'got a good answer');
-//            return $this->success('Translation should now be linked');
-//        }
-//
-//        return $this->failure('Something went wrong, sorry');
     }
 
     public function link() {
         if($this->linkedResources[$this->contextKey] == $this->target) {
             /* target resource is equal to current resource -> nothing to do */
-            //throw new Exception();
-            return $this->modx->error->failure('Uh ? Linking this resource to itself ? Stop crack pal!');
+            return $this->modx->error->failure($this->modx->lexicon('babel.error_link_itself'));
         }
 
         /** @var modResource $targetResource */
         $targetResource = $this->modx->getObject('modResource', intval($this->target));
         if(!$targetResource) {
             /* error: resource id is not valid */
-            $errorParameter = array('resource' => htmlentities($_POST['babel-link-target']));
-            //throw new Exception('error.invalid_resource_id');
-            return $this->modx->error->failure('Invalid targeted resource id');
+            $errorParameter = array('resource' => intval($this->target));
+            return $this->modx->error->failure($this->modx->lexicon('error.invalid_resource_id', $errorParameter));
         }
 
         if($targetResource->get('context_key') != $this->contextKey) {
@@ -39,16 +30,14 @@ class linkBabelTranslation extends BabelProcessor {
             $errorParameter = array(
                 'resource' => $targetResource->get('id'),
                 'context' => $this->contextKey);
-            //throw new Exception('error.resource_from_other_context');
-            return $this->modx->error->failure('Bad context key given (target does not belong to the given ctx)');
+            return $this->modx->error->failure($this->modx->lexicon('error.resource_from_other_context', $errorParameter));
         }
 
         $targetLinkedResources = $this->babel->getLinkedResources($targetResource->get('id'));
         if(count($targetLinkedResources) > 1) {
             /* error: target resource is already linked with other resources */
             $errorParameter = array('resource' => $targetResource->get('id'));
-            //throw new Exception('error.resource_already_linked');
-            return $this->modx->error->failure('Resource already linked');
+            return $this->modx->error->failure($this->modx->lexicon('error.resource_already_linked', $errorParameter));
         }
 
         /* add or change a translation link */

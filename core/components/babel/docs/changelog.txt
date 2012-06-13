@@ -1,5 +1,10 @@
 Changelog for Babel.
 
+Babel 2.3.0-alpha1
+==============
+- Refactoring actions to class based processors
+- UI refactoring (making use of ExtJS)
+
 Babel 2.2.5-pl
 ==============
 - Extended list of languages in translation files and added Romanian translation.
