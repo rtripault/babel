@@ -15,7 +15,7 @@ abstract class BabelProcessor extends modProcessor {
     public function initialize() {
         $this->babel =& $this->modx->babel;
         if (!$this->babel || !($this->babel instanceof Babel)) {
-            $this->modx->log(modX::LOG_LEVEL_ERROR, 'babel not instancianted');
+            $this->modx->log(modX::LOG_LEVEL_ERROR, 'babel not instantiated');
 
             $this->babel = $this->modx->getService('babel', 'Babel', $this->modx->getOption('babel.core_path', null, $this->modx->getOption('core_path') . 'components/babel/') . 'model/babel/');
             if (!($this->babel instanceof Babel)) return false;

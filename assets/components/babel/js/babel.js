@@ -121,8 +121,9 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
                         ,handler: function() {
                             var toolbox = Ext.getCmp('babel-toolbox');
                             if (toolbox) {
-                                toolbox.linkTranslation();
+                                toolbox.linkTranslation(this.contextKey);
                             }
+                            //console.log(this.contextKey);
                         }
                     })
                 }
@@ -170,20 +171,26 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
             menu.push(notTranslated);
         }
 
+        // @todo: "batch" actions (like duplicating a whole context while sync'ing data)
+
         // The whole menu
         this.setMenu(menu);
     }
 
-    // buildTranslations method used when the menu is generated from PHP
+    // @todo: buildTranslations method used when the menu is generated from PHP
     ,buildTranslationsFromPHP: function(cfg) {
         //console.log(cfg);
         this.setMenu(cfg);
     }
 
-    ,linkTranslation: function() {
+    ,linkTranslation: function(ctx) {
         if (!this.linkWindow) {
             this.linkWindow = MODx.load({
                 xtype: 'babel-window-translation-link'
+                ,baseParams: {
+                    action: 'mgr/translation/link'
+                    ,context_key: ctx
+                }
                 ,blankValues: true
                 ,listeners: {
                     success: function(r) {
@@ -298,10 +305,6 @@ Babel.Window.LinkTranslation = function(config) {
             xtype: 'numberfield'
             ,fieldLabel: Babel.i18n.id_of_target
             ,name: 'target'
-        },{
-            xtype: 'textfield'
-            ,fieldLabel: 'Context Key'
-            ,name: 'context_key'
         },{
             xtype: 'xcheckbox'
             ,fieldLabel: ''
