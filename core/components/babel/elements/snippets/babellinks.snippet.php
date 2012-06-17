@@ -43,21 +43,54 @@
 $babel = $modx->getService('babel','Babel',$modx->getOption('babel.core_path',null,$modx->getOption('core_path').'components/babel/').'model/babel/',$scriptProperties);
 if (!($babel instanceof Babel)) return;
 
+/* be sure babel TV is loaded */
+if(!$babel->babelTv) return;
+
+/**
+ * Hooks must either return :
+ *
+ * false : break the snippet execution
+ * true : continue the default snippet execution
+ * anything else (HTML) : return that output (and break default snippet execution)
+ */
+$debugHooks = $modx->getOption('debugHooks', $scriptProperties, false);
 $hooks = $modx->getOption('hooks', $scriptProperties);
 if (!empty($hooks)) {
-    $modx->log(modX::LOG_LEVEL_ERROR, 'we got at least one hook');
+    if ($debugHooks) {
+        $modx->log(modX::LOG_LEVEL_ERROR, 'we got at least one hook: '. $hooks);
+    }
 
-    $hooks = trim(explode(',', $hooks));
+    // @todo: trim on each entry
+    $hooks = explode(',', $hooks);
+    if ($debugHooks) {
+        $modx->log(modX::LOG_LEVEL_ERROR, 'Hook(s) array : ' ."\n". print_r($hooks, 1));
+    }
+
     foreach ($hooks as $hook) {
+        if ($debugHooks) {
+            $modx->log(modX::LOG_LEVEL_ERROR, 'running hook '. $hook);
+        }
+
         $response = $modx->runSnippet($hook, $scriptProperties);
-        if ($response === false) {
+        if ($debugHooks) {
+            $modx->log(modX::LOG_LEVEL_ERROR, 'response: '. $response);
+        }
+
+        if (!$response) {
+            if ($debugHooks) {
+                $modx->log(modX::LOG_LEVEL_ERROR, 'hook told us to break');
+            }
             return '';
+
+        } elseif ($response !== '1') {
+            // We got some data to output
+            if ($debugHooks) {
+                $modx->log(modX::LOG_LEVEL_ERROR, 'hook returned: '. $response);
+            }
+            return $response;
         }
     }
 }
-
-/* be sure babel TV is loaded */
-if(!$babel->babelTv) return;
 
 /* get snippet properties */
 $resourceId = $modx->resource->get('id');
@@ -108,11 +141,13 @@ foreach($contextKeys as $contextKey) {
         $url = $context->getOption('site_url', $modx->getOption('site_url'));
     }
     $active = ($modx->resource->get('context_key') == $contextKey) ? $activeCls : '';
+
     $placeholders = array(
         'cultureKey' => $cultureKey,
         'url' => $url,
         'active' => $active,
         'id' => $translationAvailable? $linkedResources[$contextKey] : '');
+
     $output .= $babel->getChunk($tpl,$placeholders);
 }
 
