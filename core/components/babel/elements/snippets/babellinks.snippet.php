@@ -71,7 +71,13 @@ if (!empty($hooks)) {
             $modx->log(modX::LOG_LEVEL_ERROR, 'running hook '. $hook);
         }
 
-        if (!$modx->getObject('modSnippet', array('name' => $hook))) continue;
+        if (!$modx->getObject('modSnippet', array('name' => $hook))) {
+            if ($debugHooks) {
+                $modx->log(modX::LOG_LEVEL_ERROR, 'hook: '. $hook .' not found');
+            }
+            continue;
+        }
+
         $response = $modx->runSnippet($hook, $scriptProperties);
         if ($debugHooks) {
             $modx->log(modX::LOG_LEVEL_ERROR, 'response: '. $response);
