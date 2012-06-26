@@ -94,3 +94,11 @@ $_lang['error.translation_already_exists'] = 'There is already a translation in 
 $_lang['error.could_not_create_translation'] = 'An error occured while trying to create a translation in context [[+context]].';
 
 $_lang['babel.error_link_itself'] = 'You can not link a resource to itself.';
+
+/* Status messages */
+$_lang['babel.status_load_error_title'] = '[Babel] - Error';
+$_lang['babel.status_load_error_title_msg'] = 'An error occured while loading the translations.';
+$_lang['babel.status_loaded_title'] = '[Babel] - Translations loaded';
+$_lang['babel.status_loaded_title_msg'] = 'Translations are now loaded.';
+$_lang['babel.status_loading_title'] = '[Babel] - Loading';
+$_lang['babel.status_loading_title_msg'] = 'Looking for translations…';

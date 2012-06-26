@@ -60,21 +60,13 @@ switch ($modx->event->name) {
             break;
         }
 
-        $i18n = array(
-            'translations' => $modx->lexicon('babel.translations'),
-            'not_translated' => $modx->lexicon('babel.not_translated'),
-            'link_translation' => $modx->lexicon('babel.link_translation'),
-            'id_of_target' => $modx->lexicon('babel.id_of_target'),
-            'copy_tv_values' => $modx->lexicon('babel.copy_tv_values'),
-        );
-
         /* include CSS */
         $modx->regClientCSS($babel->config['cssUrl'].'babel.css?v=6');
         $modx->regClientStartupScript($babel->config['jsUrl'].'babel.js?v=3');
         $modx->regClientStartupScript('<script type="text/javascript">
             Ext.onReady(function() {
                 Babel.config = '. $modx->toJSON($babel->config) .';
-                Babel.i18n = '. $modx->toJSON($i18n) .';
+                Ext.applyIf(MODx.lang, '. $modx->toJSON($modx->lexicon->loadCache('babel')) .');
 
                 var modAB = Ext.getCmp("modx-action-buttons");
                 if (modAB) {

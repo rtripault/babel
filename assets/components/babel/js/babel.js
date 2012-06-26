@@ -9,11 +9,11 @@ Babel.Translations = function(config) {
     config = config || {};
 
     Ext.applyIf(config, {
-        text: Babel.i18n.translations
+        text: _('babel.translations')
         ,cls: 'x-btn-text bmenu'
         ,id: 'babel-toolbox'
         ,handler: function() {
-            if(this.menu && !this.menu.isVisible() && !this.ignoreNextClick){
+            if (this.menu && !this.menu.isVisible() && !this.ignoreNextClick) {
                 this.showMenu();
             } else {
                 this.hideMenu();
@@ -36,11 +36,11 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
     // Load the translations data
     setup: function() {
         //
-//        MODx.msg.status({
-//            title: '[Babel] - Loading'
-//            ,message: 'Looking for translations...'
-//            ,delay: 1
-//        });
+        MODx.msg.status({
+            title: _('babel.status_loading_title')
+            ,message: _('babel.status_loading_title_msg')
+            ,delay: 1
+        });
 
         MODx.Ajax.request({
             url: this.url
@@ -53,27 +53,27 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
                     fn: function(r) {
                         this.buildTranslations(r.object);
 
-//                        MODx.msg.status({
-//                            title: '[Babel] - Translations loaded'
-//                            ,message: 'Translations are now loaded.'
-//                            ,delay: 1
-//                        });
+                        MODx.msg.status({
+                            title: _('babel.status_loaded_title')
+                            ,message: _('babel.status_loaded_title_msg')
+                            ,delay: 1
+                        });
                     }
                     ,scope: this
                 }
-//                ,failure: {
-//                    fn: function(r) {
-////                        console.log('failure dude!');
-////                        console.log(r);
-//
-//                        MODx.msg.status({
-//                            title: '[Babel] - Error'
-//                            ,message: 'An error occured while loading the translations.'
-//                            ,delay: 1
-//                        });
-//                    }
-//                    ,scope: this
-//                }
+                ,failure: {
+                    fn: function(r) {
+//                        console.log('failure dude!');
+//                        console.log(r);
+
+                        MODx.msg.status({
+                            title: _('babel.status_load_error_title')
+                            ,message: _('babel.status_load_error_title_msg')
+                            ,delay: 1
+                        });
+                    }
+                    ,scope: this
+                }
             }
         });
     }
@@ -86,7 +86,7 @@ Ext.extend(Babel.Translations, Ext.SplitButton, {
         var notTranslatedSub = [];
         // The "not translated" menu
         var notTranslated = [{
-            text: Babel.i18n.not_translated
+            text: _('babel.not_translated')
             ,menu: notTranslatedSub
             ,handler: function() { return false ; }
         }];
@@ -285,7 +285,7 @@ Babel.Window.LinkTranslation = function(config) {
     config = config || {};
 
     Ext.applyIf(config, {
-        title: Babel.i18n.link_translation
+        title: _('babel.link_translation')
         ,url: Babel.config.connector_url
         ,baseParams: {
             action: 'mgr/translation/link'
@@ -303,12 +303,12 @@ Babel.Window.LinkTranslation = function(config) {
             ,hidden: true
         },{
             xtype: 'numberfield'
-            ,fieldLabel: Babel.i18n.id_of_target
+            ,fieldLabel: _('babel.id_of_target')
             ,name: 'target'
         },{
             xtype: 'xcheckbox'
             ,fieldLabel: ''
-            ,boxLabel: Babel.i18n.copy_tv_values
+            ,boxLabel: _('babel.copy_tv_values')
             ,name: 'sync-tv'
         }]
     });
