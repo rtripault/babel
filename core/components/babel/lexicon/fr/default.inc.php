@@ -23,12 +23,12 @@
  */
 /**
  * Babel French language file
- * 
+ *
  * @author Jakob Class <jakob.class@class-zec.de>
  *
  * @package babel
  * @subpackage lexicon
- * 
+ *
  * @todo complete babel.language_xx entries for every language
  */
 
@@ -36,9 +36,14 @@ $_lang['babel.tv_caption'] = 'Liens de traduction de Babel';
 $_lang['babel.tv_description'] = 'Mis à jour par le plugin Babel. Veuillez ne pas modifier!';
 $_lang['babel.create_translation'] = 'Créer une traduction';
 $_lang['babel.unlink_translation'] = 'Délier la traduction';
+
+$_lang['babel.link_translation'] = 'Lier une traduction';
+$_lang['babel.translations'] = 'Traductions';
+$_lang['babel.not_translated'] = 'Non traduit';
+
 $_lang['babel.link_translation_manually'] = 'ou <strong>lier manuellement une traduction</strong>:';
-$_lang['babel.id_of_target'] = 'ID of target:';
-$_lang['babel.copy_tv_values'] = 'Copy synchronized TVs to target';
+$_lang['babel.id_of_target'] = 'ID de la cible :';
+$_lang['babel.copy_tv_values'] = 'Copier les TVs à syncroniser vers la cible';
 $_lang['babel.save'] = 'Sauvegarder';
 $_lang['babel.translation_pending'] = '[traduction en attente]';
 
@@ -75,7 +80,7 @@ $_lang['babel.language_sv'] = 'Suédois';
 $_lang['babel.language_tr'] = 'Turc';
 $_lang['babel.language_uk'] = 'Ukrainien';
 $_lang['babel.language_vi'] = 'Vietnamien';
-$_lang['babel.language_zh'] = 'Chinois'; 
+$_lang['babel.language_zh'] = 'Chinois';
 
 /* error messages */
 $_lang['error.invalid_context_key'] = '[[+context]] n\'est pas une clé de context valide.';
@@ -87,3 +92,13 @@ $_lang['error.unlink_of_selflink_not_possible'] = 'Un lien vers une « même res
 $_lang['error.translation_in_same_context'] = 'Une traduction ne peut être créée au sein d\'un même contexte.';
 $_lang['error.translation_already_exists'] = 'Il y a déjà une traduction dans le contexte [[+context]].';
 $_lang['error.could_not_create_translation'] = 'Une erreur est survenue lors de la création de traduction dans le contexte [[+context]].';
+
+$_lang['babel.error_link_itself'] = 'Vous ne pouvez lier une ressource à elle même.';
+
+/* Status messages */
+$_lang['babel.status_load_error_title'] = '[Babel] - Erreur';
+$_lang['babel.status_load_error_title_msg'] = 'Une erreur est survenue lors du chargement des traductions.';
+$_lang['babel.status_loaded_title'] = '[Babel] - Traductions chargées';
+$_lang['babel.status_loaded_title_msg'] = 'Les traductions sont maintenant chargées.';
+$_lang['babel.status_loading_title'] = '[Babel] - Chargement';
+$_lang['babel.status_loading_title_msg'] = 'À la recherche des traductions…';
